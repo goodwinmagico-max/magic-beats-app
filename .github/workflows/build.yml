@@ -1,4 +1,7 @@
-name: Build Magic Beats APK
+
+name: Magic Beats APK Build 2026
+
+
 
 on:
   push:
