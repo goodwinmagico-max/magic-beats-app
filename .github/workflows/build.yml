@@ -13,15 +13,14 @@ jobs:
     steps:
       - name: Checkout repository
         run: |
-          git clone https://github.com/${{ github.repository }}.git temp_repo
-          shopt -s dotglob
-          mv temp_repo/* .
-          rm -rf temp_repo
+          git clone https://github.com/${{ github.repository }}.git project
 
       - name: Install Dependencies
+        working-directory: project
         run: flutter pub get
 
       - name: Build APK
+        working-directory: project
         run: |
           export org.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
           flutter build apk --release --no-tree-shake-icons
@@ -30,4 +29,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MagicBeats-App-Release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: project/build/app/outputs/flutter-apk/app-release.apk
