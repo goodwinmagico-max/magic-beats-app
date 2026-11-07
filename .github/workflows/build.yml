@@ -1,4 +1,4 @@
-name: Build Magic Beats APK v2
+name: Build Magic Beats APK
 
 on:
   push:
