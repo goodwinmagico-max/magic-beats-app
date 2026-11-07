@@ -9,14 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
+      - name: Checkout repository manually
+        run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git fetch --depth 1 origin ${{ github.ref_name }}
+          git checkout FETCH_HEAD
 
-      - name: Set up Flutter Environment
+      - name: Install Flutter Manually
         run: |
           git clone https://github.com/flutter/flutter.git -b 3.19.6 --depth 1 ~/flutter
           echo "$HOME/flutter/bin" >> $GITHUB_PATH
-          flutter doctor
+          flutter --version
 
       - name: Install Dependencies
         run: flutter pub get
