@@ -13,14 +13,16 @@ jobs:
     steps:
       - name: Checkout repository
         run: |
-          git clone https://github.com/${{ github.repository }}.git .
+          git clone https://github.com/${{ github.repository }}.git temp_repo
+          shopt -s dotglob
+          mv temp_repo/* .
+          rm -rf temp_repo
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build APK
         run: |
-          # Увеличиваем лимиты памяти для сборки Android/Gradle
           export org.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
           flutter build apk --release --no-tree-shake-icons
 
