@@ -2,29 +2,37 @@ name: Build Magic Beats APK
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    container:
-      image: ghcr.io/cirruslabs/flutter:3.19.6
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        run: |
-          git clone https://github.com/${{ github.repository }}.git .
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.x'
+          channel: 'stable'
+          cache: true
 
       - name: Install Dependencies
         run: flutter pub get
 
       - name: Build APK
-        run: |
-          export org.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
-          flutter build apk --release --no-tree-shake-icons
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MagicBeats-App-Release
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
