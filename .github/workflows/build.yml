@@ -8,11 +8,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Get source code
         run: |
-          git clone --depth 1 https://github.com/${{ github.repository }}.git .
-          git checkout ${{ github.ref_name }}
+          rm -rf .git
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git fetch --depth 1 origin ${{ github.ref_name }}
+          git checkout FETCH_HEAD
 
       - name: Install Flutter Manually
         run: |
