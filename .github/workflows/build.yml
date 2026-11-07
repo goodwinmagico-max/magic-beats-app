@@ -8,22 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/cirruslabs/flutter:3.19.6
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Setup Java and Android Environment
+      - name: Checkout repository
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk curl unzip
-          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
-
-      - name: Install Flutter Manually
-        run: |
-          git clone https://github.com/flutter/flutter.git -b 3.19.6 --depth 1 ~/flutter
-          echo "$HOME/flutter/bin" >> $GITHUB_PATH
-          flutter doctor --android-licenses || true
-          flutter doctor
+          git config --global --add safe.directory /__w/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')/$(echo ${{ github.repository } | cut -d'/' -f2})
+          git clone https://github.com/${{ github.repository }}.git .
 
       - name: Install Dependencies
         run: flutter pub get
