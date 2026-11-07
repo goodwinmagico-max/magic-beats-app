@@ -11,16 +11,14 @@ jobs:
     container:
       image: ghcr.io/cirruslabs/flutter:3.19.6
     steps:
-      - name: Checkout repository
+      - name: Checkout repository directly into root
         run: |
-          git clone https://github.com/${{ github.repository }}.git project
+          git clone https://github.com/${{ github.repository }}.git .
 
       - name: Install Dependencies
-        working-directory: project
         run: flutter pub get
 
       - name: Build APK
-        working-directory: project
         run: |
           export org.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
           flutter build apk --release --no-tree-shake-icons
@@ -29,4 +27,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MagicBeats-App-Release
-          path: project/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
