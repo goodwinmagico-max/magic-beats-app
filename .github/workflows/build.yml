@@ -9,20 +9,13 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Install System Essentials & Git
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Java and Android Environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y git curl unzip openjdk-17-jdk
-
-      - name: Checkout repository manually
-        run: |
-          git init
-          git remote add origin https://github.com/${{ github.repository }}.git
-          git fetch --depth 1 origin ${{ github.ref_name }}
-          git checkout FETCH_HEAD
-
-      - name: Set up Java Environment
-        run: |
+          sudo apt-get install -y openjdk-17-jdk curl unzip
           echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
 
       - name: Install Flutter Manually
