@@ -15,21 +15,11 @@ jobs:
         run: |
           git clone https://github.com/${{ github.repository }}.git .
 
-      - name: Find Project Root and Build
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
         run: |
-          # Ищем, в какой папке лежит pubspec.yaml
-          PROJECT_DIR=$(find . -name "pubspec.yaml" -maxdepth 3 -exec dirname {} \;)
-          
-          if [ -z "$PROJECT_DIR" ]; then
-            echo "Error: pubspec.yaml not found!"
-            exit 1
-          fi
-          
-          echo "Found project root at: $PROJECT_DIR"
-          cd "$PROJECT_DIR"
-          
-          # Устанавливаем зависимости и собираем APK
-          flutter pub get
           export org.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
           flutter build apk --release --no-tree-shake-icons
 
@@ -37,4 +27,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MagicBeats-App-Release
-          path: '**/build/app/outputs/flutter-apk/app-release.apk'
+          path: build/app/outputs/flutter-apk/app-release.apk
